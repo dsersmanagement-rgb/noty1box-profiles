@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noty1Box Profile</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+    a { display: block; margin: 10px auto; padding: 10px; background:black; color:white; width:200px; text-decoration:none; border-radius:5px; }
+  </style>
+</head>
+<body>
+  <h2>Loading profile...</h2>
+  <div id="profile"></div>
+
+  <script>
+    async function loadProfile() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      if (!id) return document.body.innerHTML = "<h2>ID missing!</h2>";
+
+      const sheetId = "18Hul4Us2rd_1jXRhYAHA0KOK2zuWlbFxb0A4-mJHmXg";
+      const apiKey = "YOUR_API_KEY_HERE"; // Replace next step!
+
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1?key=${apiKey}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      const rows = data.values;
+
+      const header = rows[0];
+      const user = rows.find(row => row[0] === id);
+      if (!user) return document.body.innerHTML = "<h2>Profile not found</h2>";
+
+      const profileDiv = document.getElementById("profile");
+      profileDiv.innerHTML = `
+        <h1>${user[1]}</h1>
+        ${user[2] ? `<a href="${user[2]}" target="_blank">Instagram</a>` : ""}
+        ${user[3] ? `<a href="${user[3]}" target="_blank">TikTok</a>` : ""}
+        ${user[4] ? `<a href="https://wa.me/${user[4]}" target="_blank">WhatsApp</a>` : ""}
+      `;
+    }
+    loadProfile();
+  </script>
+</body>
+</html>
