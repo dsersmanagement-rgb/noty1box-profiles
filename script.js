@@ -1,3 +1,4 @@
+// Load profile from Google Sheet
 async function loadProfile() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -8,36 +9,23 @@ async function loadProfile() {
   }
 
   try {
-    const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
     const response = await fetch(url);
-    const rows = await response.json();
+    const data = await response.json();
 
-    console.log("Rows loaded:", rows);
-
-    const clean = s => (s || "").toString().trim();
-
-    // Convert array rows into objects
+    const rows = data.values;
     const headers = rows[0];
-    const data = rows.slice(1).map(r => {
-      let obj = {};
-      headers.forEach((h, i) => obj[h] = r[i]);
-      return obj;
-    });
-
-    console.log("Formatted rows:", data);
-
-    const user = data.find(r => clean(r.id) === clean(id));
-    console.log("Matched user:", user);
+    const user = rows.find(row => row[0] === id);
 
     if (!user) {
       document.getElementById("profile").innerHTML = "<p>ID not found.</p>";
       return;
     }
 
-    const name = user.name || "Business Name";
-    const instagram = user.instagram || "";
-    const tiktok = user.tiktok || "";
-    const whatsapp = user.whatsapp || "";
+    const name = user[1] || "Business Name";
+    const instagram = user[2] || "";
+    const tiktok = user[3] || "";
+    const whatsapp = user[4] || "";
 
     let buttons = "";
     if (instagram) buttons += `<a href="${instagram}" target="_blank">Instagram</a>`;
