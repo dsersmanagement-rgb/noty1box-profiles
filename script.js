@@ -13,17 +13,15 @@ async function loadProfile() {
     const response = await fetch(url);
     const rows = await response.json();
 
-    console.log("Rows loaded:", rows);
-
-    // ✅ Match row by ID
-    const user = rows.find(row => row.id?.trim() === id.trim());
+    // ✅ Match by ID
+    const user = rows.find(r => r.id?.trim() === id.trim());
 
     if (!user) {
       document.getElementById("profile").innerHTML = "<p>ID not found.</p>";
       return;
     }
 
-    // ✅ Load fields
+    // ✅ Extract fields
     const name = user.name || "Business Name";
     const instagram = user.instagram || "";
     const tiktok = user.tiktok || "";
@@ -35,12 +33,9 @@ async function loadProfile() {
     if (tiktok) buttons += `<a href="${tiktok}" target="_blank">TikTok</a>`;
     if (whatsapp) buttons += `<a href="https://wa.me/${whatsapp}" target="_blank">WhatsApp</a>`;
 
-    // ✅ Update HTML content
     document.getElementById("profile").innerHTML = `
       <h2>${name}</h2>
-      <div class="links">
-        ${buttons || "<p>No links available.</p>"}
-      </div>
+      ${buttons || "<p>No links available.</p>"}
     `;
   } catch (error) {
     console.error(error);
