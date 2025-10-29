@@ -1,4 +1,4 @@
-// Load profile from Google Sheet
+// Load profile from Google Sheet using OpenSheet (no API key required)
 async function loadProfile() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -9,30 +9,24 @@ async function loadProfile() {
   }
 
   try {
-    // ✅ FIX: Make sure we load full A:F range
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:F?key=${API_KEY}`;
-
+    // ✅ OpenSheet instantly turns your sheet into a public JSON API
+    const url = `https://opensheet.elk.sh/18Hul4Us2rd_1jXRhYAHA0KOK2zuWlbFxb0A4-mJHmXg/Sheet1`;
     const response = await fetch(url);
-    const data = await response.json();
+    const rows = await response.json();
 
-    const rows = data.values || [];
-    if (rows.length < 2) {
-      document.getElementById("profile").innerHTML = "<p>No data found.</p>";
-      return;
-    }
-
-    // ✅ FIX: Trim ID to avoid mismatch
-    const user = rows.find(row => row[0] && row[0].trim() === id.trim());
+    // ✅ Match ID case-insensitively and trim any spaces
+    const user = rows.find(row => row.id && row.id.trim().toLowerCase() === id.trim().toLowerCase());
 
     if (!user) {
       document.getElementById("profile").innerHTML = "<p>ID not found.</p>";
       return;
     }
 
-    const name = user[1] || "Business Name";
-    const instagram = user[2] || "";
-    const tiktok = user[3] || "";
-    const whatsapp = user[4] || "";
+    // ✅ Extract data safely
+    const name = user.name || "Business Name";
+    const instagram = user.instagram || "";
+    const tiktok = user.tiktok || "";
+    const whatsapp = user.whatsapp || "";
 
     let buttons = "";
     if (instagram) buttons += `<a href="${instagram}" target="_blank">Instagram</a>`;
