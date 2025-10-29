@@ -14,11 +14,19 @@ async function loadProfile() {
 
     console.log("Rows loaded:", rows);
 
-    const clean = s => (s || "").toString().trim().replace(/\s+/g, "");
-    const user = rows.find(r => clean(r.id) === clean(id));
+    const clean = s => (s || "").toString().trim();
 
-    console.log("ID from URL:", clean(id));
-    console.log("Row IDs:", rows.map(r => clean(r.id)));
+    // Convert array rows into objects
+    const headers = rows[0];
+    const data = rows.slice(1).map(r => {
+      let obj = {};
+      headers.forEach((h, i) => obj[h] = r[i]);
+      return obj;
+    });
+
+    console.log("Formatted rows:", data);
+
+    const user = data.find(r => clean(r.id) === clean(id));
     console.log("Matched user:", user);
 
     if (!user) {
