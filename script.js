@@ -9,13 +9,20 @@ async function loadProfile() {
   }
 
   try {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+    // ✅ FIX: Make sure we load full A:F range
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:F?key=${API_KEY}`;
+
     const response = await fetch(url);
     const data = await response.json();
 
-    const rows = data.values;
-    const headers = rows[0];
-    const user = rows.find(row => row[0] === id);
+    const rows = data.values || [];
+    if (rows.length < 2) {
+      document.getElementById("profile").innerHTML = "<p>No data found.</p>";
+      return;
+    }
+
+    // ✅ FIX: Trim ID to avoid mismatch
+    const user = rows.find(row => row[0] && row[0].trim() === id.trim());
 
     if (!user) {
       document.getElementById("profile").innerHTML = "<p>ID not found.</p>";
