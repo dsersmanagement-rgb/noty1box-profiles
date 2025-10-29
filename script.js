@@ -8,26 +8,29 @@ async function loadProfile() {
   }
 
   try {
-    // ✅ Use OpenSheet API instead of Google API
     const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
     const response = await fetch(url);
     const rows = await response.json();
 
-    // ✅ Match by ID
-    const user = rows.find(r => r.id?.trim() === id.trim());
+    console.log("Rows loaded:", rows);
+
+    const clean = s => (s || "").toString().trim().replace(/\s+/g, "");
+    const user = rows.find(r => clean(r.id) === clean(id));
+
+    console.log("ID from URL:", clean(id));
+    console.log("Row IDs:", rows.map(r => clean(r.id)));
+    console.log("Matched user:", user);
 
     if (!user) {
       document.getElementById("profile").innerHTML = "<p>ID not found.</p>";
       return;
     }
 
-    // ✅ Extract fields
     const name = user.name || "Business Name";
     const instagram = user.instagram || "";
     const tiktok = user.tiktok || "";
     const whatsapp = user.whatsapp || "";
 
-    // ✅ Build buttons
     let buttons = "";
     if (instagram) buttons += `<a href="${instagram}" target="_blank">Instagram</a>`;
     if (tiktok) buttons += `<a href="${tiktok}" target="_blank">TikTok</a>`;
