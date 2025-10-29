@@ -14,15 +14,16 @@ async function loadProfile() {
     const data = await response.json();
 
     const rows = data.values;
-    const headers = rows[0];
     const user = rows.find(row => row[0] === id);
 
+    // ✅ If user does not exist yet → REDIRECT TO TALLY FORM
     if (!user) {
-      document.getElementById("profile").innerHTML = "<p>ID not found.</p>";
+      window.location.href = `https://tally.so/r/nWG99R?id=${id}`;
       return;
     }
 
-    const name = user[1] || "Business Name";
+    // ✅ If user exists → Show profile
+    const name = user[1] || "";
     const instagram = user[2] || "";
     const tiktok = user[3] || "";
     const whatsapp = user[4] || "";
