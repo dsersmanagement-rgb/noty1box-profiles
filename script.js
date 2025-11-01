@@ -4,7 +4,7 @@ async function loadProfile() {
   const id = params.get("id");
 
   if (!id) {
-    document.getElementById("profile").innerHTML = "<p>No ID found.</p>";
+    document.getElementById("profile").innerHTML = "<p>Configuration réussie ! Veuillez fermer cette page puis rescanner votre Noty1Box.</p>";
     return;
   }
 
@@ -35,11 +35,11 @@ async function loadProfile() {
 
     document.getElementById("profile").innerHTML = `
       <h2>${name}</h2>
-      ${buttons || "<p>No links available.</p>"}
+      ${buttons || "<p>Aucun lien.</p>"}
     `;
   } catch (error) {
     console.error(error);
-    document.getElementById("profile").innerHTML = "<p>Error loading profile.</p>";
+    document.getElementById("profile").innerHTML = "<p>Erreur 404</p>";
   }
 }
 
