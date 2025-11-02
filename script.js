@@ -4,7 +4,7 @@ async function loadProfile() {
   const id = params.get("id");
 
   if (!id) {
-    document.getElementById("profile").innerHTML = "<p>Configuration réussie ! Veuillez fermer cette page puis rescanner votre Noty1Box.</p>";
+    document.getElementById("profile").innerHTML = "<p>Configuration réussie !</p> <p>Veuillez fermer cette page puis rescanner votre Noty1Box.</p>";
     return;
   }
 
