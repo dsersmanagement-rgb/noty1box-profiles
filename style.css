@@ -29,3 +29,22 @@ a {
 a:hover {
   opacity: 0.85;
 }
+
+.social-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 50px;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.social-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
